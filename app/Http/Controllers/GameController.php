@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class GameController extends Controller
 {
+    use AuthorizesRequests;
 
     /**
      * Listado (por ahora sin filtros; se añaden en el paso 12)
@@ -44,6 +46,8 @@ class GameController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Game::class);
+
         return view('games.create', [
             'statuses' => Game::STATUSES,
         ]);
@@ -55,6 +59,8 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Game::class);
+
         $data = $request->validate([
             'title'    => ['required', 'string', 'max:255'],
             'platform' => ['nullable', 'string', 'max:255'],
@@ -64,8 +70,7 @@ class GameController extends Controller
 
         $request->user()->games()->create($data);
 
-        return redirect()->route('games.index')
-            ->with('status', 'Juego creado correctamente');
+        return redirect()->route('games.index')->with('status', 'Juego creado correctamente');
     }
 
     /**
@@ -73,7 +78,7 @@ class GameController extends Controller
      */
     public function edit(Request $request, Game $game)
     {
-        abort_unless($game->user_id === $request->user()->id, 403);
+        $this->authorize('update', $game);
 
         return view('games.edit', [
             'game'     => $game,
@@ -86,7 +91,7 @@ class GameController extends Controller
      */
     public function update(Request $request, Game $game)
     {
-        abort_unless($game->user_id === $request->user()->id, 403);
+        $this->authorize('update', $game);
 
         $data = $request->validate([
             'title'    => ['required', 'string', 'max:255'],
@@ -97,8 +102,7 @@ class GameController extends Controller
 
         $game->update($data);
 
-        return redirect()->route('games.index')
-            ->with('status', 'Juego actualizado');
+        return redirect()->route('games.index')->with('status', 'Juego actualizado');
     }
 
     /**
@@ -106,11 +110,10 @@ class GameController extends Controller
      */
     public function destroy(Request $request, Game $game)
     {
-        abort_unless($game->user_id === $request->user()->id, 403);
+        $this->authorize('delete', $game);
 
         $game->delete();
 
-        return redirect()->route('games.index')
-            ->with('status', 'Juego eliminado');
+        return redirect()->route('games.index')->with('status', 'Juego eliminado');
     }
 }
