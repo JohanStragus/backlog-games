@@ -23,7 +23,7 @@ jobs:
           path: vendor
           key: composer-${{ hashFiles('**/composer.lock') }}
 
-      - name: Install dependencies
+      - name: Install PHP dependencies
         run: composer install --no-interaction --prefer-dist
 
       - name: Prepare .env
@@ -31,6 +31,20 @@ jobs:
 
       - name: Generate app key
         run: php artisan key:generate
+
+      # ⬇️ AÑADIDO PARA SOLUCIONAR EL MANIFEST DE VITE
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build assets (Vite)
+        run: npm run build
+      # ⬆️ AÑADIDO
 
       - name: Run migrations (testing, sqlite memory)
         run: php artisan migrate --env=testing --no-interaction
