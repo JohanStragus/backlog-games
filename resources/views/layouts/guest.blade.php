@@ -277,8 +277,8 @@
 <body class="{{ request()->routeIs('register') ? 'page-register' : '' }}">
     @php
     $authImage = asset('images/juegosPortada2.jpg');
-    if (request()->routeIs('register') && file_exists(public_path('images/register-bg.jpg'))) {
-    $authImage = asset('images/register-bg.jpg');
+    if (request()->routeIs('register') && file_exists(public_path('images/juegoPortada.jpg'))) {
+    $authImage = asset('images/juegoPortada.jpg');
     }
     @endphp
 

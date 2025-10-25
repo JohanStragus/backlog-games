@@ -9,7 +9,7 @@ Route::get('/', fn () => redirect()->route('games.index'));
 
 // Dashboard por defecto de Breeze
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect()->route('games.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Rutas protegidas (solo usuarios logueados)
