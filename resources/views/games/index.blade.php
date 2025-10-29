@@ -20,13 +20,13 @@
         }
     </style>
 </head>
-<body class="bg-[#0f1117] text-gray-200 antialiased">
+
+<body class="bg-[#0f1711] text-gray-200 antialiased"> {{-- 🌿 Fondo temporalmente verde oscuro --}}
 
 <div class="min-h-screen flex">
 
     {{-- SIDEBAR --}}
-    <aside class="w-64 bg-gradient-to-b from-[#1a1d29] to-[#0f1117] border-r border-gray-800/70 flex flex-col shadow-[inset_-1px_0_0_rgba(255,255,255,0.04)]">
-
+    <aside class="w-64 bg-gradient-to-b from-[#3b1a5e] to-[#1a0f29] border-r border-violet-800/70 flex flex-col shadow-[inset_-1px_0_0_rgba(255,255,255,0.08)] transition-all duration-300">
         <div class="px-5 py-5 border-b border-gray-800/70">
             <div class="flex items-center gap-3">
                 <img src="{{ asset('images/marca.png') }}" alt="Backlog Games" class="w-9 h-9 rounded-md">
@@ -179,7 +179,6 @@
                     {{-- Info --}}
                     <div class="flex-1 min-w-0">
 
-                        {{-- Status pill con color dinámico --}}
                         @php
                             $colorMap = [
                                 'done' => 'bg-green-600/20 text-green-300 border border-green-500/40 ring-1 ring-green-500/20',
