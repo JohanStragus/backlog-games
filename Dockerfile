@@ -1,21 +1,26 @@
-# --- STAGE 1: Build de Node (assets Vite) ---
+# --- STAGE 1: Build de Node (Vite) ---
 FROM node:20-alpine AS node_builder
 WORKDIR /app
 
 COPY package*.json ./
 RUN npm ci
-COPY . .
-RUN npm run build
 
-# --- STAGE 2: PHP deps (Composer) ---
+COPY . .
+RUN npm run build   # ← genera public/build correctamente
+
+
+# --- STAGE 2: Instalar dependencias de PHP (Composer) ---
 FROM composer:2 AS composer_builder
 WORKDIR /app
+
 COPY --from=node_builder /app /app
 RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
-# --- STAGE 3: Imagen final ---
+
+# --- STAGE 3: Imagen final de PHP-FPM ---
 FROM php:8.3-fpm-alpine
 
+# Instalar extensiones necesarias para Laravel
 RUN set -eux; \
     apk update; \
     apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev oniguruma-dev libzip-dev; \
@@ -26,10 +31,14 @@ RUN set -eux; \
     apk del .build-deps
 
 WORKDIR /var/www/html
+
+# Copiar el código, vendor y public/build desde los stages anteriores
 COPY --from=composer_builder /app /var/www/html
 
+# Permisos
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 storage bootstrap/cache
+    && chmod -R 775 storage bootstrap/cache public
 
 USER www-data
+
 EXPOSE 9000
