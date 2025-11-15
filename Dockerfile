@@ -39,6 +39,9 @@ COPY --from=composer_builder /app /var/www/html
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 storage bootstrap/cache public
 
+# Borrar linea si algo falla
+VOLUME /var/www/html 
+
 USER www-data
 
 EXPOSE 9000
