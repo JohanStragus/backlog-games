@@ -37,7 +37,7 @@ jobs:
           touch database/database.sqlite
           php artisan migrate --force --env=testing
 
-      # --- Vite (como ya hacías tú) ---
+      # --- Vite ---
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
